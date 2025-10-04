@@ -5,6 +5,7 @@ C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\Ag
 C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\AgroAPI.Domain.AssemblyInfoInputs.cache
 C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\AgroAPI.Domain.AssemblyInfo.cs
 C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\AgroAPI.Domain.csproj.CoreCompileInputs.cache
+C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\AgroAPI.Domain.sourcelink.json
 C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\AgroAPI.Domain.dll
 C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\refint\AgroAPI.Domain.dll
 C:\Dev\agro-iot-platform\services\AgroService\AgroAPI.Domain\obj\Debug\net9.0\AgroAPI.Domain.pdb

@@ -6,8 +6,11 @@ const {
   obtenerSensores,
   obtenerSensorPorId,
   actualizarSensor,
-  eliminarSensor
+  eliminarSensor,
+  obtenerSensoresPorParcelaId
 } = require('../controllers/sensorController');
+
+router.get('/by-parcela/:parcelaId', obtenerSensoresPorParcelaId);
 
 // Rutas para /api/sensores
 router.route('/')

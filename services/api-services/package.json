@@ -16,7 +16,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "mongoose": "^8.18.3"
+    "mongoose": "^8.18.3",
+    "stream-json": "^1.9.1"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",

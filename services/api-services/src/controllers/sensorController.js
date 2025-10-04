@@ -90,10 +90,32 @@ const eliminarSensor = async (req, res) => {
   }
 };
 
+// --- READ (BY PARCELA ID) ---
+/**
+ * @desc    Obtener todos los sensores de una parcela específica
+ * @route   GET /api/sensores/by-parcela/:parcelaId
+ */
+const obtenerSensoresPorParcelaId = async (req, res) => {
+  try {
+    // 1. Extraemos el id de la parcela de los parámetros de la URL
+    const { parcelaId } = req.params;
+
+    // 2. Buscamos en la base de datos todos los sensores donde 
+    //    el campo 'id_parcela_sql' coincida.
+    const sensores = await Sensor.find({ id_parcela_sql: parcelaId });
+
+    // 3. Devolvemos los sensores encontrados (puede ser un array vacío si no hay ninguno)
+    res.status(200).json(sensores);
+  } catch (error) {
+    res.status(500).json({ message: 'Error del servidor', error: error.message });
+  }
+};
+
 module.exports = {
   crearSensor,
   obtenerSensores,
   obtenerSensorPorId,
   actualizarSensor,
-  eliminarSensor
+  eliminarSensor,
+  obtenerSensoresPorParcelaId
 };
