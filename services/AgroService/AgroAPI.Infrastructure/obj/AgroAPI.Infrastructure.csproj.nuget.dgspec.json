@@ -1,23 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj": {}
+    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
+    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj",
+        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj",
         "projectName": "AgroAPI.Application",
-        "projectPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj",
-        "packagesPath": "C:\\Users\\pochi\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Application\\obj\\",
+        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj",
+        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\pochi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,14 +28,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj": {
-                "projectPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj"
+              "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj": {
+                "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj"
               }
             }
           }
@@ -48,7 +51,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -83,24 +86,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj": {
+    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
         "projectName": "AgroAPI.Domain",
-        "projectPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
-        "packagesPath": "C:\\Users\\pochi\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Domain\\obj\\",
+        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
+        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\pochi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -109,6 +114,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -127,7 +133,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -148,24 +154,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj": {
+    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj",
         "projectName": "AgroAPI.Infrastructure",
-        "projectPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\pochi\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\pochi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -174,14 +182,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
-                "projectPath": "C:\\Dev\\agro-iot-platform\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj"
+              "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
+                "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj"
               }
             }
           }
@@ -196,12 +205,22 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.9, )"
@@ -229,7 +248,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

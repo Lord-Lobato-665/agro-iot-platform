@@ -1,1 +1,12 @@
-{"Version":1,"Hash":"7XZvM/Pzqe+2m6vgeYQ4fslYB+JxIdDMSFVg85Gzrxc=","Source":"AgroAPI.API","BasePath":"_content/AgroAPI.API","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "7XZvM/Pzqe+2m6vgeYQ4fslYB+JxIdDMSFVg85Gzrxc=",
+  "Source": "AgroAPI.API",
+  "BasePath": "_content/AgroAPI.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
