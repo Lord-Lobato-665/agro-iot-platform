@@ -48,8 +48,20 @@ builder.Services.AddControllers();
 builder.Services.AddOcelot(builder.Configuration)
     .AddPolly();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 
+app.UseCors("AllowAll");
 // --- PIPELINE DE MIDDLEWARE EXPLÍCITO ---
 app.UseRouting();
 app.UseAuthentication();
