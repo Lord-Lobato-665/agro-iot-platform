@@ -2,6 +2,7 @@ services:
   # ---- Bases de datos ----
   mongo:
     image: mongo:7-jammy
+    profiles: ["managed-db"]
     ports:
       - "27017:27017"
     volumes:
@@ -15,6 +16,7 @@ services:
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    profiles: ["managed-db"]
     container_name: sqlserver
     environment:
       - ACCEPT_EULA=Y
