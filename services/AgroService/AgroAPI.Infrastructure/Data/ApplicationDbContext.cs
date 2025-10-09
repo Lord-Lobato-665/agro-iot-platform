@@ -5,33 +5,32 @@ namespace AgroAPI.Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    // Este constructor es VITAL. Permite que la configuración de la conexión
-    // (que haremos en Program.cs) sea "inyectada" en el DbContext.
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
-    // Cada DbSet<T> representa una tabla en la base de datos.
+    // DbSets de la aplicación principal
     public DbSet<Cultivo> Cultivos { get; set; }
     public DbSet<Parcela> Parcelas { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
-    
-    // También incluimos las tablas pivote como DbSets
     public DbSet<ParcelaCultivo> ParcelaCultivos { get; set; }
     public DbSet<ParcelaUsuario> ParcelaUsuarios { get; set; }
+    public DbSet<Rol> Roles { get; set; }
+    public DbSet<UsuarioRol> UsuarioRoles { get; set; }
+    public DbSet<LogEntry> LogEntries { get; set; }
 
-    // Aquí configuramos las relaciones complejas usando la "Fluent API".
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // --- Filtros de borrado lógico ---
         modelBuilder.Entity<Parcela>().HasQueryFilter(p => !p.IsDeleted);
         modelBuilder.Entity<Cultivo>().HasQueryFilter(c => !c.IsDeleted);
         modelBuilder.Entity<Usuario>().HasQueryFilter(u => !u.IsDeleted);
 
-        // Configuración de la relación Muchos a Muchos entre Parcela y Cultivo
+        // --- Configuración de relaciones M-M ---
         modelBuilder.Entity<ParcelaCultivo>()
-            .HasKey(pc => new { pc.ParcelaId, pc.CultivoId }); // Clave primaria compuesta
+            .HasKey(pc => new { pc.ParcelaId, pc.CultivoId });
 
         modelBuilder.Entity<ParcelaCultivo>()
             .HasOne(pc => pc.Parcela)
@@ -43,9 +42,8 @@ public class ApplicationDbContext : DbContext
             .WithMany(c => c.ParcelaCultivos)
             .HasForeignKey(pc => pc.CultivoId);
 
-        // Configuración de la relación Muchos a Muchos entre Parcela y Usuario
         modelBuilder.Entity<ParcelaUsuario>()
-            .HasKey(pu => new { pu.ParcelaId, pu.UsuarioId }); // Clave primaria compuesta
+            .HasKey(pu => new { pu.ParcelaId, pu.UsuarioId });
 
         modelBuilder.Entity<ParcelaUsuario>()
             .HasOne(pu => pu.Parcela)
@@ -56,5 +54,28 @@ public class ApplicationDbContext : DbContext
             .HasOne(pu => pu.Usuario)
             .WithMany(u => u.ParcelaUsuarios)
             .HasForeignKey(pu => pu.UsuarioId);
+
+        // Configuracion para los roles
+
+        // 1. Definir la clave primaria compuesta para la tabla de unión
+        modelBuilder.Entity<UsuarioRol>()
+            .HasKey(ur => new { ur.UsuarioId, ur.RolId });
+
+        // 2. Definir las relaciones
+        modelBuilder.Entity<UsuarioRol>()
+            .HasOne(ur => ur.Usuario)
+            .WithMany(u => u.UsuarioRoles)
+            .HasForeignKey(ur => ur.UsuarioId);
+
+        modelBuilder.Entity<UsuarioRol>()
+            .HasOne(ur => ur.Rol)
+            .WithMany(r => r.UsuarioRoles)
+            .HasForeignKey(ur => ur.RolId);
+
+        // 3. SEMBRAR DATOS (Seed Data): Crear los roles por defecto
+        modelBuilder.Entity<Rol>().HasData(
+            new Rol { Id = 1, Nombre = "Admin" },
+            new Rol { Id = 2, Nombre = "User" }
+        );
     }
 }

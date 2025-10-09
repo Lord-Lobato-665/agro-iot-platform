@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <EFC_VERSION>8.0.6</EFC_VERSION>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\AgroAPI.Application\AgroAPI.Application.csproj" />
   </ItemGroup>

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
     <PackageReference Include="MMLib.SwaggerForOcelot" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Ocelot" Version="24.0.1" />
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AgroAPI.Application\AgroAPI.Application.csproj" />
+    <ProjectReference Include="..\AgroAPI.Infrastructure\AgroAPI.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

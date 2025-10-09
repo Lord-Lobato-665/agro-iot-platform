@@ -11,4 +11,5 @@ public class Usuario
     
     // Propiedad de navegación
     public ICollection<ParcelaUsuario> ParcelaUsuarios { get; set; } = new List<ParcelaUsuario>();
+    public ICollection<UsuarioRol> UsuarioRoles { get; set; } = new List<UsuarioRol>();
 }

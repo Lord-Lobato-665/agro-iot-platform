@@ -1,4 +1,10 @@
+using AgroAPI.Application.Interfaces;
+using AgroAPI.Application.Services;
+using AgroAPI.Gateway.Middleware;
+using AgroAPI.Infrastructure.Data;
+using AgroAPI.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -13,7 +19,6 @@ builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var keyString = jwtSettings["Key"];
 
-// Verificación para evitar el error si la clave no está en appsettings.json
 if (string.IsNullOrEmpty(keyString))
 {
     throw new ArgumentNullException(nameof(keyString), "La clave JWT (Jwt:Key) no puede ser nula o vacía en appsettings.json");
@@ -40,28 +45,37 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// --- CONFIGURACIÓN DE SERVICIOS UNIFICADA ---
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// --- OTROS SERVICIOS ---
+builder.Services.AddSingleton<ILoggingService, LoggingService>();
+builder.Services.AddSingleton<ILoggingRepository, LoggingRepository>();
+
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
-
-builder.Services.AddOcelot(builder.Configuration)
-    .AddPolly();
+builder.Services.AddOcelot(builder.Configuration).AddPolly();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
-// --- PIPELINE DE MIDDLEWARE EXPLÍCITO ---
+// --- PIPELINE DE MIDDLEWARE ---
+app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseCors("AllowAll");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Le decimos explícitamente a la aplicación que aquí terminan las rutas de los controladores
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-
-// Solo si la petición no coincidió con ningún controlador, llegará aquí.
 await app.UseOcelot();
 
 app.Run();

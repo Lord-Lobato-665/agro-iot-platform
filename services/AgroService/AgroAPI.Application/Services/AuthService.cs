@@ -15,13 +15,15 @@ namespace AgroAPI.Application.Services;
 
 public class AuthService : IAuthService
 {
-    // --- CAMBIA LA DEPENDENCIA ---
     private readonly IUserRepository _userRepository;
+    private readonly IRolRepository _rolRepository;
     private readonly IConfiguration _configuration;
 
-    public AuthService(IUserRepository userRepository, IConfiguration configuration)
+    // Modificamos el constructor
+    public AuthService(IUserRepository userRepository, IRolRepository rolRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
+        _rolRepository = rolRepository;
         _configuration = configuration;
     }
 
@@ -30,7 +32,7 @@ public class AuthService : IAuthService
         var userExists = await _userRepository.GetUserByEmailAsync(model.Correo);
         if (userExists != null)
         {
-            return false; // El usuario ya existe
+            return false;
         }
 
         var user = new Usuario
@@ -40,6 +42,13 @@ public class AuthService : IAuthService
             Telefono = model.Telefono,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password)
         };
+
+        // Usamos el nuevo repositorio para buscar el rol
+        var userRole = await _rolRepository.GetRolByNameAsync("User");
+        if (userRole != null)
+        {
+            user.UsuarioRoles.Add(new UsuarioRol { RolId = userRole.Id });
+        }
 
         await _userRepository.AddUserAsync(user);
         return true;
@@ -62,18 +71,29 @@ public class AuthService : IAuthService
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
 
-        var claims = new[]
+        // Creamos una lista de claims para poder añadir los roles dinámicamente
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Correo),
             new Claim(JwtRegisteredClaimNames.Name, user.Nombre),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // ID único para el token
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        // --- LÓGICA AÑADIDA PARA LOS ROLES ---
+        if (user.UsuarioRoles != null)
+        {
+            foreach (var usuarioRol in user.UsuarioRoles)
+            {
+                // Añadimos un claim de tipo "role" por cada rol que tenga el usuario
+                claims.Add(new Claim(ClaimTypes.Role, usuarioRol.Rol.Nombre));
+            }
+        }
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(1), // Duración del token
+            Subject = new ClaimsIdentity(claims), 
+            Expires = DateTime.UtcNow.AddHours(1),
             Issuer = _configuration["Jwt:Issuer"],
             Audience = _configuration["Jwt:Audience"],
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
