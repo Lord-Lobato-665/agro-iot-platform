@@ -20,7 +20,10 @@ public class UserRepository : IUserRepository
 
     public async Task<Usuario?> GetUserByEmailAsync(string email)
     {
-        return await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == email);
+        return await _context.Usuarios
+                             .Include(u => u.UsuarioRoles)
+                             .ThenInclude(ur => ur.Rol)
+                             .FirstOrDefaultAsync(u => u.Correo == email);
     }
 
     public async Task AddUserAsync(Usuario user)

@@ -21,6 +21,10 @@ builder.Services.AddScoped<ICultivoRepository, CultivoRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILoggingService, LoggingService>();
+builder.Services.AddScoped<ILoggingRepository, LoggingRepository>();
+builder.Services.AddScoped<IRolRepository, RolRepository>();
+builder.Services.AddScoped<IRolService, RolService>();
 
 builder.Services.AddAuthentication(options =>
 {

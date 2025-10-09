@@ -17,7 +17,7 @@ namespace AgroAPI.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -40,6 +40,41 @@ namespace AgroAPI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cultivos");
+                });
+
+            modelBuilder.Entity("AgroAPI.Domain.Entities.LogEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("RequestBody")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResponseBody")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ResponseStatusCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LogEntries");
                 });
 
             modelBuilder.Entity("AgroAPI.Domain.Entities.Parcela", b =>
@@ -99,6 +134,35 @@ namespace AgroAPI.Infrastructure.Migrations
                     b.ToTable("ParcelaUsuarios");
                 });
 
+            modelBuilder.Entity("AgroAPI.Domain.Entities.Rol", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nombre = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nombre = "User"
+                        });
+                });
+
             modelBuilder.Entity("AgroAPI.Domain.Entities.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -129,6 +193,21 @@ namespace AgroAPI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("AgroAPI.Domain.Entities.UsuarioRol", b =>
+                {
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsuarioId", "RolId");
+
+                    b.HasIndex("RolId");
+
+                    b.ToTable("UsuarioRoles");
                 });
 
             modelBuilder.Entity("AgroAPI.Domain.Entities.ParcelaCultivo", b =>
@@ -169,6 +248,25 @@ namespace AgroAPI.Infrastructure.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("AgroAPI.Domain.Entities.UsuarioRol", b =>
+                {
+                    b.HasOne("AgroAPI.Domain.Entities.Rol", "Rol")
+                        .WithMany("UsuarioRoles")
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgroAPI.Domain.Entities.Usuario", "Usuario")
+                        .WithMany("UsuarioRoles")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("AgroAPI.Domain.Entities.Cultivo", b =>
                 {
                     b.Navigation("ParcelaCultivos");
@@ -181,9 +279,16 @@ namespace AgroAPI.Infrastructure.Migrations
                     b.Navigation("ParcelaUsuarios");
                 });
 
+            modelBuilder.Entity("AgroAPI.Domain.Entities.Rol", b =>
+                {
+                    b.Navigation("UsuarioRoles");
+                });
+
             modelBuilder.Entity("AgroAPI.Domain.Entities.Usuario", b =>
                 {
                     b.Navigation("ParcelaUsuarios");
+
+                    b.Navigation("UsuarioRoles");
                 });
 #pragma warning restore 612, 618
         }
