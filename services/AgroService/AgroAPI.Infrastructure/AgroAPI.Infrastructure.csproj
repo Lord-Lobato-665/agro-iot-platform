@@ -9,9 +9,19 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <!-- CAMBIA LAS VERSIONES PARA USAR LA VARIABLE -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EFC_VERSION)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EFC_VERSION)">
+=======
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+>>>>>>> testing_all_in_one
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

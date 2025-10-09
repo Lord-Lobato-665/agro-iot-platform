@@ -9,8 +9,15 @@
       "AgroAPI.Infrastructure/1.0.0": {
         "dependencies": {
           "AgroAPI.Application": "1.0.0",
+<<<<<<< HEAD
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.6",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.6"
+=======
+          "Microsoft.EntityFrameworkCore": "9.0.9",
+          "Microsoft.EntityFrameworkCore.Design": "9.0.9",
+          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.9",
+          "Microsoft.EntityFrameworkCore.Tools": "9.0.9"
+>>>>>>> testing_all_in_one
         },
         "runtime": {
           "AgroAPI.Infrastructure.dll": {}

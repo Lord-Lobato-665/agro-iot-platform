@@ -1,0 +1,85 @@
+services:
+  # ---- Bases de datos ----
+  mongo:
+    image: mongo:7-jammy
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD:-Your_password123}
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+
+  # ---- Node: Servicio de ingesta ----
+  api-services:
+    build:
+      context: ./api-services
+      dockerfile: Dockerfile
+    container_name: api-services
+    env_file:
+      - ./api-services/.env
+    environment:
+      - PORT=${PORT:-3001}
+      - MONGO_URI=${MONGO_URI:-mongodb://mongo:27017/agro-iot-platform}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    # If your Node service exposes HTTP and you want to access it from the host, uncomment:
+    # ports:
+    #   - "3001:3001"
+
+
+  # ---- .NET: Agro API ----
+  agroapi-api:
+    build:
+      context: ./AgroService
+      dockerfile: ./AgroAPI.API/Dockerfile
+    container_name: agroapi-api
+    env_file:
+      - ./.env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8081
+      # maps to Configuration["ConnectionStrings:DefaultConnection"] and pulls from services/.env
+      - "ConnectionStrings__DefaultConnection=${SQL_CONN_STR}"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+
+  # ---- .NET: API Gateway ----
+  agroapi-gateway:
+    build:
+      context: ./AgroService
+      dockerfile: ./AgroAPI.Gateway/Dockerfile
+    container_name: agroapi-gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      # example so the Gateway knows where to point
+      - "Downstreams__AgroApiBase=${AGRO_API_BASE:-http://agroapi-api:8081}"
+    ports:
+      - "5172:8080"
+    depends_on:
+      - agroapi-api
+
+volumes:
+  mongo_data:
+  mssql_data:

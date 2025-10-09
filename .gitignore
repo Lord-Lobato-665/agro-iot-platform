@@ -1,0 +1,3 @@
+services/AgroService/.vs/
+
+# IDE and build artifacts (Visual Studio, dotnet)\n.vs/\n*.user\n*.suo\n**/bin/\n**/obj/\n*.pdb\n*.dll\npublish/\n# Env files (do not commit secrets)\nservices/.env\n

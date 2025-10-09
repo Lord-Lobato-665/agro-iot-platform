@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgroAPI.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251001174718_AddSoftDeleteToUsuario")]
+    [Migration("20251005212701_AddSoftDeleteToUsuario")]
     partial class AddSoftDeleteToUsuario
     {
         /// <inheritdoc />

@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AgroAPI.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d2a5e1645a8db2184e0d85a8e0427565f4e6761")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ee7bac7920dc8245e339d1c299e528199c0e29e")]
+>>>>>>> testing_all_in_one
 [assembly: System.Reflection.AssemblyProductAttribute("AgroAPI.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AgroAPI.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
