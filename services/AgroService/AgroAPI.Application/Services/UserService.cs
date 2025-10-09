@@ -33,7 +33,8 @@ public class UserService : IUserService
             Nombre = viewModel.Nombre,
             Telefono = viewModel.Telefono
         };
-        return _userRepository.UpdateAsync(id, user);
+        // Pasamos la lista de IDs de roles al repositorio
+        return _userRepository.UpdateAsync(id, user, viewModel.RolesIds);
     }
 
     public Task<bool> DeleteUserAsync(int id)

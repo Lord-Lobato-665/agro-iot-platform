@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace AgroAPI.Application.ViewModels;
 
@@ -11,6 +12,5 @@ public class UserUpdateViewModel
     [Phone]
     public string Telefono { get; set; }
 
-    // Nota: No incluimos el correo (generalmente no se cambia)
-    // ni la contraseña (debe tener su propio endpoint seguro).
+    public List<int> RolesIds { get; set; } = new List<int>();
 }

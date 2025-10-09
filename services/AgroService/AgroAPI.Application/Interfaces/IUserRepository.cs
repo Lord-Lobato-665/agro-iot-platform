@@ -11,7 +11,7 @@ public interface IUserRepository
     Task AddUserAsync(Usuario user);
     Task<UserDto?> GetByIdAsync(int id);
     Task<IEnumerable<UserDto>> GetAllAsync(bool includeDeleted);
-    Task<bool> UpdateAsync(int id, Usuario user);
+    Task<bool> UpdateAsync(int id, Usuario user, List<int> rolesIds);
     Task<bool> DeleteAsync(int id);
     Task<bool> RestoreAsync(int id);
 }
