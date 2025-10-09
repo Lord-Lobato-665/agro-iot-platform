@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "7XZvM/Pzqe+2m6vgeYQ4fslYB+JxIdDMSFVg85Gzrxc=",
+  "Hash": "W7LAbQ2IlQR1BPLsB+MSPJEpKips4vKvN842rKbDXz8=",
   "Source": "AgroAPI.API",
   "BasePath": "_content/AgroAPI.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }

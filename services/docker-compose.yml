@@ -18,9 +18,10 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     profiles: ["managed-db"]
     container_name: sqlserver
+    env_file:
+      - ./.env
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=${SA_PASSWORD:-Your_password123}
       - MSSQL_PID=Express
     ports:
       - "1433:1433"

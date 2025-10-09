@@ -1,45 +1,36 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.API\\AgroAPI.API.csproj": {}
+    "/src/AgroAPI.API/AgroAPI.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.API\\AgroAPI.API.csproj": {
+    "/src/AgroAPI.API/AgroAPI.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.API\\AgroAPI.API.csproj",
+        "projectUniqueName": "/src/AgroAPI.API/AgroAPI.API.csproj",
         "projectName": "AgroAPI.API",
-        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.API\\AgroAPI.API.csproj",
-        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.API\\obj\\",
+        "projectPath": "/src/AgroAPI.API/AgroAPI.API.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/src/AgroAPI.API/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
-                "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj"
+              "/src/AgroAPI.Application/AgroAPI.Application.csproj": {
+                "projectPath": "/src/AgroAPI.Application/AgroAPI.Application.csproj"
               },
-              "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj"
+              "/src/AgroAPI.Infrastructure/AgroAPI.Infrastructure.csproj": {
+                "projectPath": "/src/AgroAPI.Infrastructure/AgroAPI.Infrastructure.csproj"
               }
             }
           }
@@ -53,8 +44,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -102,43 +92,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
+    "/src/AgroAPI.Application/AgroAPI.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj",
+        "projectUniqueName": "/src/AgroAPI.Application/AgroAPI.Application.csproj",
         "projectName": "AgroAPI.Application",
-        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj",
-        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\obj\\",
+        "projectPath": "/src/AgroAPI.Application/AgroAPI.Application.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/src/AgroAPI.Application/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj": {
-                "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj"
+              "/src/AgroAPI.Domain/AgroAPI.Domain.csproj": {
+                "projectPath": "/src/AgroAPI.Domain/AgroAPI.Domain.csproj"
               }
             }
           }
@@ -152,8 +133,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -188,35 +168,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj": {
+    "/src/AgroAPI.Domain/AgroAPI.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
+        "projectUniqueName": "/src/AgroAPI.Domain/AgroAPI.Domain.csproj",
         "projectName": "AgroAPI.Domain",
-        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
-        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\obj\\",
+        "projectPath": "/src/AgroAPI.Domain/AgroAPI.Domain.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/src/AgroAPI.Domain/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -234,8 +205,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -256,43 +226,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj": {
+    "/src/AgroAPI.Infrastructure/AgroAPI.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj",
+        "projectUniqueName": "/src/AgroAPI.Infrastructure/AgroAPI.Infrastructure.csproj",
         "projectName": "AgroAPI.Infrastructure",
-        "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\AgroAPI.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\x\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Infrastructure\\obj\\",
+        "projectPath": "/src/AgroAPI.Infrastructure/AgroAPI.Infrastructure.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/src/AgroAPI.Infrastructure/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\x\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj": {
-                "projectPath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Application\\AgroAPI.Application.csproj"
+              "/src/AgroAPI.Application/AgroAPI.Application.csproj": {
+                "projectPath": "/src/AgroAPI.Application/AgroAPI.Application.csproj"
               }
             }
           }
@@ -306,8 +267,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -350,7 +310,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
