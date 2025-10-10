@@ -1,170 +1,103 @@
-<#
-deploy-k8s.ps1
-Automates deploying the repo's Kubernetes manifests to a local cluster (minikube, kind, or Docker Desktop kubernetes).
-
-Usage:
-  # dry run (no changes)
-  .\deploy-k8s.ps1 -DryRun
-
-  # full flow: build images, load into cluster, apply manifests, run migrations, run smoke tests
-  .\deploy-k8s.ps1
-
-Options:
-  -NoBuild         Skip building Docker images (useful if already built)
-  -SkipMigrations  Don't run EF migrations in-cluster
-  -DryRun          Only validate prerequisites and print actions (no docker/kubectl calls)
-  -ImagesPrefix    Optional prefix for image names (default uses the tags in k8s/ manifests)
-#>
 param(
-    [switch]$NoBuild,
-    [switch]$SkipMigrations,
-    [switch]$DryRun,
-    [string]$ImagesPrefix = '',
-    [string]$Namespace = 'agro-iot'
+  [Parameter(Mandatory = $true)][string]$DevPrefix,
+  [string]$KubeContext,
+  [string]$Namespace,
+  [string]$ManifestsPath = (Join-Path $PSScriptRoot 'k8s'),
+  [string]$ImagesPrefix,              # p.ej. 'ghcr.io/tu-org/'  (vacío = usa imágenes locales)
+  [switch]$UseLocalImages,            # si usas imágenes locales cargadas a kind (services-*:latest)
+  [int]$WaitTimeoutSec = 180,
+  [switch]$PortForwardGateway         # crea port-forward al gateway si lo encuentra
 )
 
 $ErrorActionPreference = 'Stop'
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
-Write-Host "deploy-k8s: root=$root"
+function Run { param($cmd) Write-Host ">> $cmd"; iex $cmd }
 
-function Run { param($cmd) Write-Host "=> $cmd"; if (-not $DryRun) { iex $cmd } }
+# Contexto/namespace por defecto en entorno Kind per-dev
+if (-not $KubeContext) { $KubeContext = "kind-kind-$('kind-' + $DevPrefix)" }  # => kind-kind-<DevPrefix>
+if (-not $Namespace)   { $Namespace   = "dev-$DevPrefix" }
 
-function Check-CommandExists {
-    param($name)
-    $c = Get-Command $name -ErrorAction SilentlyContinue
-    return $null -ne $c
+# Validaciones mínimas
+if (-not (Get-Command kubectl -ErrorAction SilentlyContinue)) {
+  throw "kubectl no está disponible en PATH."
+}
+$contexts = & kubectl config get-contexts -o name 2>$null
+if (-not ($contexts -contains $KubeContext)) {
+  throw "El contexto '$KubeContext' no existe. Usa: kubectl config get-contexts"
 }
 
-# 1. prerequisites
-if (-not (Check-CommandExists 'kubectl')) { throw 'kubectl not found in PATH. Install kubectl before running this script.' }
-if (-not (Check-CommandExists 'docker')) { throw 'docker not found in PATH. Install Docker before running this script.' }
+# Crear/asegurar namespace
+Run ("kubectl create namespace {0} --context {1} --dry-run=client -o yaml | kubectl apply -f -" -f $Namespace, $KubeContext)
 
-# detect cluster provider (minikube / kind / docker-desktop)
-$clusterType = 'docker-desktop'
-try {
-    if (Check-CommandExists 'minikube') {
-        $minikubeStatus = & minikube status 2>$null | Out-String
-        if ($minikubeStatus -match 'host: Running') { $clusterType = 'minikube' }
-    }
-} catch {}
-try {
-    if (Check-CommandExists 'kind') {
-        $nodes = kubectl get nodes -o jsonpath='{.items[0].metadata.name}' 2>$null
-        if ($nodes -and $nodes -match 'kind-') { $clusterType = 'kind' }
-    }
-} catch {}
-Write-Host "Detected cluster type: $clusterType"
-
-# Verify kubectl can talk to a cluster (fail fast with actionable instructions)
-try {
-    $clusterInfo = & kubectl cluster-info 2>&1 | Out-String
-    if ($LASTEXITCODE -ne 0) { throw $clusterInfo }
-} catch {
-    Write-Host "ERROR: kubectl cannot connect to a Kubernetes cluster or the API server is not reachable." -ForegroundColor Red
-    Write-Host "kubectl output:" -ForegroundColor Yellow
-    Write-Host $_ -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "Common fixes:" -ForegroundColor Cyan
-    Write-Host " - If you use Docker Desktop: enable 'Kubernetes' in Docker Desktop Settings and wait until it's running." -ForegroundColor Cyan
-    Write-Host " - If you use minikube: run 'minikube start' and ensure 'minikube status' reports Running." -ForegroundColor Cyan
-    Write-Host " - If you use kind: create a cluster with 'kind create cluster' or set KUBECONFIG to a reachable cluster." -ForegroundColor Cyan
-    Write-Host " - Verify with: kubectl cluster-info or kubectl get nodes" -ForegroundColor Cyan
-    Write-Host ""
-    throw "kubectl not connected to a cluster. Aborting deploy-k8s." 
+# Aplicar manifests (kustomize si hay kustomization.yaml, si no aplica recursivo -f)
+$kustom = Join-Path $ManifestsPath 'kustomization.yaml'
+if (Test-Path $kustom) {
+  Run ("kubectl apply -k ""{0}"" --namespace {1} --context {2}" -f $ManifestsPath, $Namespace, $KubeContext)
+} else {
+  Run ("kubectl apply -f ""{0}"" --recursive --namespace {1} --context {2}" -f $ManifestsPath, $Namespace, $KubeContext)
 }
 
-# image names (as used in k8s/ manifests). If ImagesPrefix provided, prepend it.
-$images = @(
-    @{ name='services-api-services:latest'; path='services/api-services'; dockerfile='services/api-services/Dockerfile' },
-    @{ name='services-agroapi-api:latest'; path='services/AgroService'; dockerfile='services/AgroService/AgroAPI.API/Dockerfile' },
-    @{ name='services-agroapi-gateway:latest'; path='services/AgroService'; dockerfile='services/AgroService/AgroAPI.Gateway/Dockerfile' }
-)
-
-if ($ImagesPrefix -ne '') {
-    foreach ($img in $images) { $img.name = "$ImagesPrefix/$($img.name)" }
+# --- Ajuste de imágenes para dev ---
+# Mapeo esperado de contenedor -> imagen local construida
+$containerToLocalImage = @{
+  # nombra tus contenedores EXACTAMENTE como en los manifests de k8s
+  'api-services'     = 'services-api-services:latest'
+  'agroapi-api'      = 'services-agroapi-api:latest'
+  'agroapi-gateway'  = 'services-agroapi-gateway:latest'
 }
 
-# 2. build images
-if (-not $NoBuild) {
-    foreach ($img in $images) {
-        $buildCmd = "docker build -t $($img.name) -f $($root)\$($img.dockerfile) $($root)\$($img.path)"
-        Run $buildCmd
-    }
-} else { Write-Host "Skipping image build (-NoBuild)" }
-
-# 3. load images into cluster if needed
-switch ($clusterType) {
-    'minikube' {
-        foreach ($img in $images) { Run "minikube image load $($img.name)" }
-    }
-    'kind' {
-        # Detect the kind cluster name(s) and load images into the first cluster found.
-        try {
-            $clustersOut = & kind get clusters 2>&1
-            if ($LASTEXITCODE -eq 0 -and $clustersOut) {
-                $clusterLines = ($clustersOut -split "`n" | Where-Object { \\$_ -ne '' })
-                $clusterName = $clusterLines[0].Trim()
-            } else {
-                $clusterName = 'kind'
-            }
-        } catch {
-            $clusterName = 'kind'
-        }
-        Write-Host "Loading images into kind cluster: $clusterName"
-        foreach ($img in $images) { Run "kind load docker-image $($img.name) --name $clusterName" }
-    }
-    default { Write-Host "Assuming Docker Desktop local images are available to the cluster" }
+# Si se usa prefijo de registro, construimos imagen como <prefix><nombre>:latest
+$containerToPrefixedImage = @{}
+if ($ImagesPrefix) {
+  $containerToPrefixedImage['api-services']    = ($ImagesPrefix.TrimEnd('/') + '/services-api-services:latest')
+  $containerToPrefixedImage['agroapi-api']     = ($ImagesPrefix.TrimEnd('/') + '/services-agroapi-api:latest')
+  $containerToPrefixedImage['agroapi-gateway'] = ($ImagesPrefix.TrimEnd('/') + '/services-agroapi-gateway:latest')
 }
 
-# 4. apply manifests
-Run "kubectl apply -f $root\k8s\namespace.yaml"
-Run "kubectl apply -n $Namespace -f $root\k8s\mongo-statefulset.yaml"
-Run "kubectl apply -n $Namespace -f $root\k8s\sqlserver-deployment.yaml"
-Run "kubectl apply -n $Namespace -f $root\k8s\api-services-deployment.yaml"
-Run "kubectl apply -n $Namespace -f $root\k8s\agroapi-api-deployment.yaml"
-Run "kubectl apply -n $Namespace -f $root\k8s\agroapi-gateway-deployment.yaml"
-
-# 5. wait for readiness
-function Wait-DeploymentReady($name, $timeoutSec=180) {
-    Write-Host "Waiting rollout for deployment/$name in namespace $Namespace"
-    $cmd = "kubectl -n $Namespace rollout status deploy/$name --timeout=${timeoutSec}s"
-    Run $cmd
+if ($UseLocalImages -or $ImagesPrefix) {
+  # Enumerar deployments y setear imagen contenedor por contenedor
+  $deploys = & kubectl -n $Namespace --context $KubeContext get deploy -o json | ConvertFrom-Json
+  foreach ($d in $deploys.items) {
+    $depName = $d.metadata.name
+    foreach ($c in $d.spec.template.spec.containers) {
+      $cname = $c.name
+      $newImg = $null
+      if ($ImagesPrefix -and $containerToPrefixedImage.ContainsKey($cname)) {
+        $newImg = $containerToPrefixedImage[$cname]
+      } elseif ($UseLocalImages -and $containerToLocalImage.ContainsKey($cname)) {
+        $newImg = $containerToLocalImage[$cname]
+      }
+      if ($newImg) {
+        Run ("kubectl -n {0} --context {1} set image deploy/{2} {3}={4}" -f $Namespace, $KubeContext, $depName, $cname, $newImg)
+      }
+    }
+  }
 }
 
-Wait-DeploymentReady 'api-services' 120
-Wait-DeploymentReady 'agroapi-api' 120
-Wait-DeploymentReady 'agroapi-gateway' 120
+# Esperar rollouts
+$deployList = (& kubectl -n $Namespace --context $KubeContext get deploy -o name 2>$null)
+foreach ($dep in $deployList) {
+  Run ("kubectl -n {0} --context {1} rollout status {2} --timeout={3}s" -f $Namespace, $KubeContext, $dep, $WaitTimeoutSec)
+}
 
-# wait for mongo statefulset pod ready
-Run "kubectl -n $Namespace wait --for=condition=ready pod -l app=mongo --timeout=120s"
+# Mostrar estado básico
+Run ("kubectl -n {0} --context {1} get pods,svc" -f $Namespace, $KubeContext)
 
-# 6. run migrations by copying local source into a temporary pod that has dotnet SDK
-if (-not $SkipMigrations) {
-    if ($DryRun) { Write-Host "DryRun: would run migrations using a temporary dotnet/sdk pod and kubectl cp" }
-    else {
-    Write-Host "Starting ef-runner pod in namespace $Namespace"
-    Run "kubectl -n $Namespace run ef-runner --image=mcr.microsoft.com/dotnet/sdk:8.0 --restart=Never --command -- sleep 3600"
-    Run "kubectl -n $Namespace wait --for=condition=ready pod/ef-runner --timeout=60s"
-        # copy local source into pod
-    $localPath = Join-Path $root 'services\AgroService'
-        if (-not (Test-Path $localPath)) { throw "Local source not found at $localPath; cannot run migrations" }
-    Write-Host "Copying source to ef-runner pod (this may take a moment) in namespace $Namespace"
-    # kubectl cp expects a local path format; convert backslashes to forward slashes to avoid issues
-    $localPathForCp = $localPath -replace '\\','/'
-    Run "kubectl cp $localPathForCp $Namespace/ef-runner:/src"
-        # execute migration inside pod
-    $conn = 'Server=sqlserver;Database=AgroIoT_Parcelas;User Id=sa;Password=REPLACE_WITH_STRONG_PASSWORD;TrustServerCertificate=True;'
-    # Build the kubectl exec command using a PowerShell single-quoted string so shell tokens
-    # like $PATH, && and || are not interpreted by PowerShell. Insert the connection string
-    # by concatenation (wrapped in single quotes for the shell).
-        $execCmd = 'kubectl -n ' + $Namespace + ' exec ef-runner -- sh -c "export PATH=$PATH:/root/.dotnet/tools && dotnet tool install --global dotnet-ef --version 8.* || true && cd /src && export ConnectionStrings__DefaultConnection=''' + $conn + ''' && dotnet ef database update --project AgroAPI.Infrastructure --startup-project AgroAPI.API"'
-        Run $execCmd
-        Run "kubectl -n $Namespace delete pod ef-runner --ignore-not-found"
-    }
-} else { Write-Host "Skipping migrations (-SkipMigrations)" }
+# (Opcional) Port-forward al gateway si hay un Service apropiado
+if ($PortForwardGateway) {
+  # Heurística: busca svc por nombre o puerto 5172
+  $svcs = & kubectl -n $Namespace --context $KubeContext get svc -o json | ConvertFrom-Json
+  $gw = $svcs.items | Where-Object {
+    $_.metadata.name -match 'gateway' -or ($_.spec.ports | Where-Object { $_.port -eq 5172 })
+  } | Select-Object -First 1
 
-# 7. run smoke tests job
-Run "kubectl -n $Namespace apply -f $root\k8s\smoke-tests-job.yaml"
-Write-Host "You can inspect the job logs with: kubectl logs -n $Namespace job/smoke-tests"
+  if ($gw) {
+    $svcName = $gw.metadata.name
+    Write-Host "Haciendo port-forward de $svcName 5172:5172 (Ctrl+C para cortar) ..."
+    # No uses Run aquí para no encapsular el proceso (permite Ctrl+C)
+    kubectl -n $Namespace --context $KubeContext port-forward svc/$svcName 5172:5172
+  } else {
+    Write-Host "No se encontró Service del gateway para port-forward. Revisa nombres/puertos en tus manifests."
+  }
+}
 
-Write-Host "deploy-k8s completed"
+Write-Host "Deploy listo en namespace $Namespace, contexto $KubeContext."
