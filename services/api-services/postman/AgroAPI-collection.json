@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "AgroAPI Collection",
+    "_postman_id": "agroapi-collection",
+    "description": "Collection to test AgroAPI endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/agro/auth/register",
+  "body": { "mode": "raw", "raw": "{\"Nombre\": \"Test User\", \"Correo\": \"{{test_email}}\", \"Password\": \"{{test_password}}\"}" }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/agro/auth/login",
+  "body": { "mode": "raw", "raw": "{\"Correo\": \"{{test_email}}\", \"Password\": \"{{test_password}}\"}" }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json.Token) { pm.environment.set('authToken', json.Token); }",
+              "else if (json.token) { pm.environment.set('authToken', json.token); }",
+              "else if (json.accessToken) { pm.environment.set('authToken', json.accessToken); }",
+              "else if (json.data && (json.data.token || json.data.Token)) { pm.environment.set('authToken', json.data.token || json.data.Token); }"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Get Parcelas",
+      "request": { "method": "GET", "url": "{{baseUrl}}/agro/parcelas" },
+      "response": []
+    },
+    {
+      "name": "Get Parcelas (includeDeleted)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/agro/parcelas?includeDeleted=true" },
+      "response": []
+    },
+    {
+      "name": "Create Parcela",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{authToken}}" } ],
+        "url": "{{baseUrl}}/agro/parcelas",
+        "body": { "mode": "raw", "raw": "{\"name\": \"Parcela Postman\", \"description\": \"Creada por colección Postman\"}" }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Sensores",
+      "request": { "method": "GET", "url": "{{baseUrl}}/sensores" },
+      "response": []
+    },
+    {
+      "name": "Create Sensor",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/sensores",
+        "body": { "mode": "raw", "raw": "{\"name\": \"Sensor Postman\", \"type\": \"temp\", \"unit\": \"C\"}" }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Lecturas",
+      "request": { "method": "GET", "url": "{{baseUrl}}/lecturas" },
+      "response": []
+    },
+    {
+      "name": "Create Lectura",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/lecturas",
+        "body": { "mode": "raw", "raw": "{\"sensorId\": null, \"value\": 22.3, \"timestamp\": \"2025-10-09T00:00:00Z\"}" }
+      },
+      "response": []
+    },
+    {
+      "name": "Parcela Detallada (example)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/gateway/parcela-detallada/{{parcelaId}}", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ] },
+      "response": []
+    }
+  ]
+}

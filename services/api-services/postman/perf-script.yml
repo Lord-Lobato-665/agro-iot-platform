@@ -1,0 +1,26 @@
+config:
+  target: "{{ baseUrl }}"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+  payload: {}
+  defaults:
+    headers:
+      Content-Type: "application/json"
+scenarios:
+  - name: "Get Parcelas and Sensors"
+    flow:
+      - get:
+          url: "/agro/parcelas"
+      - get:
+          url: "/sensores"
+      - get:
+          url: "/lecturas"
+  - name: "Create Lecturas"
+    flow:
+      - post:
+          url: "/lecturas"
+          json:
+            sensorId: null
+            value: 25.5
+            timestamp: "{{ $timestamp }}"

@@ -1,0 +1,11 @@
+{
+  "id": "agroapi-environment",
+  "name": "AgroAPI Env",
+  "values": [
+    { "key": "baseUrl", "value": "http://localhost:5172", "enabled": true },
+    { "key": "test_email", "value": "test+automation@example.com", "enabled": true },
+    { "key": "test_password", "value": "P@ssw0rd123!", "enabled": true },
+    { "key": "parcelaId", "value": "", "enabled": true }
+  ],
+  "timestamp": 0
+}

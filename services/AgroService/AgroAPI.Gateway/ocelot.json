@@ -1,17 +1,6 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/ParcelaDetallada/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [ { "Host": "agroapi-api", "Port": 8081 } ],
-      "UpstreamPathTemplate": "/parcela-detallada/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
-    },
-    {
       "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [ { "Host": "agroapi-api", "Port": 8081 } ],
@@ -26,10 +15,24 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
+      "DownstreamPathTemplate": "/api/sensores",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "api-services", "Port": 3001 } ],
+      "UpstreamPathTemplate": "/sensores",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/lecturas/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [ { "Host": "api-services", "Port": 3001 } ],
       "UpstreamPathTemplate": "/lecturas/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/lecturas",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ { "Host": "api-services", "Port": 3001 } ],
+      "UpstreamPathTemplate": "/lecturas",
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {

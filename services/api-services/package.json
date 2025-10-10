@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently \"npm:start:dev\" \"npm:ingest\"",
     "start:dev": "nodemon src/index.js",
-    "ingest": "node ingestion-runner.js"
+    "ingest": "node ingestion-runner.js",
+    "test:postman": "npm --prefix ./postman run test:all"
   },
   "keywords": [],
   "author": "",

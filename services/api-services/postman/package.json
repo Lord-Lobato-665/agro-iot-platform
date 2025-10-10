@@ -1,0 +1,14 @@
+{
+  "name": "api-services-postman",
+  "version": "1.0.0",
+  "scripts": {
+    "test:functional": "newman run AgroAPI-collection.json -e AgroAPI-environment.json --reporters cli,htmlextra --reporter-htmlextra-export ./reports/newman-report.html",
+    "test:perf": "artillery run perf-script.yml -o reports/artillery-report.json",
+    "test:all": "mkdir -p reports || true && npm run test:functional && npm run test:perf"
+  },
+  "devDependencies": {
+    "newman": "^6.8.0",
+    "newman-reporter-htmlextra": "^1.23.1",
+    "artillery": "^2.0.0-39"
+  }
+}

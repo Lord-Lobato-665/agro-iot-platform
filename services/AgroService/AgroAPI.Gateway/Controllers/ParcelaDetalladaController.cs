@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AgroAPI.Gateway.Controllers;
 
 [ApiController]
-[Route("gateway/parcela-detallada")]
+[Route("parcela-detallada")]
 public class ParcelaDetalladaController : ControllerBase
 {
     private readonly IHttpClientFactory _httpClientFactory;
@@ -33,8 +33,9 @@ public class ParcelaDetalladaController : ControllerBase
         }
 
         // 2. Llamar a ambos microservicios en paralelo
-        var parcelaTask = client.GetAsync($"http://localhost:5109/api/parcelas/{id}");
-        var sensoresTask = client.GetAsync($"http://localhost:3001/api/sensores/by-parcela/{id}");
+    // Use container hostnames so the gateway container can reach downstream services in the compose network
+    var parcelaTask = client.GetAsync($"http://agroapi-api:8081/api/parcelas/{id}");
+    var sensoresTask = client.GetAsync($"http://api-services:3001/api/sensores/by-parcela/{id}");
 
         await Task.WhenAll(parcelaTask, sensoresTask);
 

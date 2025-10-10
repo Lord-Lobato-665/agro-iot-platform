@@ -9,8 +9,8 @@ const Sensor = require('../models/Sensor'); // Necesitamos verificar que el sens
  */
 const registrarLectura = async (req, res) => {
   try {
-    // El body debería tener: sensorId, value, unit, timestamp, coords
-    const { sensorId, value, unit, timestamp, coords } = req.body;
+    // El body debería tener: sensorId, tipo, value, unit, timestamp, coords
+    const { sensorId, tipo, value, unit, timestamp, coords } = req.body;
 
     // --- Validación Opcional pero Recomendada ---
     // Verificar que el sensor que envía el dato está registrado en nuestro catálogo
@@ -22,6 +22,7 @@ const registrarLectura = async (req, res) => {
 
     const nuevaLectura = new LecturaSensor({
       sensorId,
+      tipo,
       value,
       unit,
       timestamp,

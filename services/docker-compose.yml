@@ -43,9 +43,8 @@ services:
     depends_on:
       - mongo
     restart: unless-stopped
-    # If your Node service exposes HTTP and you want to access it from the host, uncomment:
-    # ports:
-    #   - "3001:3001"
+    ports:
+      - "3001:3001"
 
 
   # ---- .NET: Agro API ----
@@ -73,11 +72,16 @@ services:
       context: ./AgroService
       dockerfile: ./AgroAPI.Gateway/Dockerfile
     container_name: agroapi-gateway
+    env_file:
+      - ./.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
       # example so the Gateway knows where to point
       - "Downstreams__AgroApiBase=${AGRO_API_BASE:-http://agroapi-api:8081}"
+      # map the same SQL_CONN_STR into the gateway process so request-logging (or other DB usage)
+      # uses the exact connection string created by deploy.ps1 (services/.env -> SQL_CONN_STR)
+      - "ConnectionStrings__DefaultConnection=${SQL_CONN_STR}"
     ports:
       - "5172:8080"
     depends_on:
