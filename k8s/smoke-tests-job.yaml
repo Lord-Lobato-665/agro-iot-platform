@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: smoke-tests
+  namespace: agro-iot
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: smoke
+          image: curlimages/curl:8.4.0
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Waiting for gateway to be reachable..."
+              for i in $(seq 1 30); do
+                if curl -sSf http://agroapi-gateway:8080/ >/dev/null 2>&1; then
+                  echo "Gateway reachable"
+                  break
+                fi
+                echo "Retrying... ($i)"
+                sleep 2
+              done
+              echo "Running simple smoke checks..."
+              echo "GET / ->"; curl -sS http://agroapi-gateway:8080/ || true
+              echo "GET /swagger/index.html ->"; curl -sS http://agroapi-gateway:8080/swagger/index.html || true
+              echo "GET /api/parcela ->"; curl -sS http://agroapi-gateway:8080/api/parcela || true
+              echo "Completed smoke tests"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi

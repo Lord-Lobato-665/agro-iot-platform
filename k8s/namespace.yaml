@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agro-iot
+---
+# Optional label to target resources
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agro-iot-dev
+  labels:
+    environment: development

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agroapi-gateway
+  namespace: agro-iot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agroapi-gateway
+  template:
+    metadata:
+      labels:
+        app: agroapi-gateway
+    spec:
+      containers:
+        - name: agroapi-gateway
+          image: services-agroapi-gateway:latest
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: Downstreams__AgroApiBase
+              value: "http://agroapi-api:8081"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: db-conn-secret
+                  key: ConnectionStrings__DefaultConnection
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agroapi-gateway
+  namespace: agro-iot
+spec:
+  selector:
+    app: agroapi-gateway
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sqlserver-secret
+  namespace: agro-iot
+stringData:
+  SA_PASSWORD: "REPLACE_WITH_STRONG_PASSWORD"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver
+  namespace: agro-iot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      containers:
+        - name: sqlserver
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_PID
+              value: "Express"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sqlserver-secret
+                  key: SA_PASSWORD
+          ports:
+            - containerPort: 1433
+          readinessProbe:
+            tcpSocket:
+              port: 1433
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver
+  namespace: agro-iot
+spec:
+  selector:
+    app: sqlserver
+  ports:
+    - port: 1433
+      targetPort: 1433
+  type: ClusterIP

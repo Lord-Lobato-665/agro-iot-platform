@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ef-migrations
+  namespace: agro-iot
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: ef-migrate
+          image: mcr.microsoft.com/dotnet/sdk:8.0
+          env:
+            - name: REPO_URL
+              value: "" # Set this to a publicly reachable git repo URL if you want the job to clone the source
+            - name: REPO_BRANCH
+              value: "develop"
+            - name: CONNECTION_STRING
+              value: "Server=sqlserver;Database=AgroIoT_Parcelas;User Id=sa;Password=REPLACE_WITH_STRONG_PASSWORD;TrustServerCertificate=True;"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              # If REPO_URL is provided, clone it. Otherwise expect that the image contains the project source (not default).
+              if [ -n "${REPO_URL}" ]; then
+                echo "Cloning ${REPO_URL} (branch ${REPO_BRANCH})..."
+                apk add --no-cache git || true
+                git clone --branch "${REPO_BRANCH}" "${REPO_URL}" /src
+                cd /src/AgroService
+              else
+                echo "REPO_URL not set; expecting source code to be present in /src. Mount your repo if needed. Exiting.";
+                exit 1
+              fi
+              export PATH="$PATH:/root/.dotnet/tools"
+              dotnet tool install --global dotnet-ef --version 8.* || true
+              # Run EF database update using the runtime connection string
+              echo "Using CONNECTION_STRING=${CONNECTION_STRING}"
+              export ConnectionStrings__DefaultConnection="${CONNECTION_STRING}"
+              dotnet ef database update --project AgroAPI.Infrastructure --startup-project AgroAPI.API
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      # If you prefer to mount your local repo into the job, create a PVC and mount it at /src
+      # volumes: []
