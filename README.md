@@ -130,3 +130,73 @@ Adjust fields according to the actual API DTOs.
 ---
 
 End of developer setup guide.
+
+## Running tests and viewing logs
+
+This project includes a single-command test runner that performs a functional pass over the main API endpoints (register, login, parcelas CRUD, sensores, lecturas) and a small, built-in performance exercise. The runner logs per-endpoint results and produces a perf CSV that you can open in Excel.
+
+1) Prepare your environment (only needed once per machine)
+
+```powershell
+# Copy example env files (do not commit the real .env)
+Copy-Item .\services\.env.example .\services\.env
+Copy-Item .\services\api-services\.env.example .\services\api-services\.env
+
+# Edit services/.env and set SA_PASSWORD and SQL_CONN_STR when using -ManagedDb
+notepad .\services\.env
+```
+
+2) Start the stack (recommended: managed DBs for convenience)
+
+```powershell
+# Start containers and run EF migrations when using managed DBs
+.\deploy.ps1 -ManagedDb
+
+# If you already have the DBs running externally, omit -ManagedDb
+#.\deploy.ps1
+```
+
+Notes:
+- `deploy.ps1` expects `services/.env` to exist. It will not overwrite it unless you pass `-Force`.
+- When you run `.\deploy.ps1 -ManagedDb`, the script creates a temporary env mapping so EF migrations receive the same `SQL_CONN_STR` used by the services.
+
+3) Run the integrated test runner (single command)
+
+```powershell
+# From repo root
+powershell -NoProfile -ExecutionPolicy Bypass -File .\services\api-services\scripts\run-tests.ps1
+```
+
+What this does:
+- Executes a functional flow: register -> login -> create parcela -> create sensor -> POST lecturas (uses detected sensorId)
+- Runs a short performance exercise and writes a per-job CSV.
+- Writes a detailed per-endpoint log to `services/api-services/logs/endpoints-<timestamp>.txt`.
+- Writes perf data to `services/api-services/logs/perf-aggregate-<timestamp>.csv`.
+
+4) Where to find results
+
+- Functional & per-endpoint log: `services/api-services/logs/endpoints-<timestamp>.txt` — this file contains HTTP status and response bodies for each endpoint the runner exercised.
+- Perf CSV (open in Excel): `services/api-services/logs/perf-aggregate-<timestamp>.csv` — columns: timestamp, job, status, ms, ok
+
+5) Validate the Gateway uses the same SQL connection string
+
+When you run `.\deploy.ps1 -ManagedDb`, `deploy.ps1` expects `services/.env` to contain `SQL_CONN_STR`. The Compose config has been updated so both `agroapi-api` and `agroapi-gateway` receive the same runtime `ConnectionStrings__DefaultConnection` value from `${SQL_CONN_STR}` (and the gateway loads `services/.env` via `env_file`). That means request-logging or any DB operations performed by the Gateway will use the same connection string created/used during deploy.
+
+To check inside the running gateway container that the variable is present:
+
+```powershell
+docker exec agroapi-gateway env | Select-String 'ConnectionStrings__DefaultConnection'
+```
+
+6) Troubleshooting
+
+- If the functional runner reports a POST /lecturas failure, ensure the Node ingestion service is running and that a valid sensor was created by the runner (the runner extracts the created sensorId automatically). If you want to run the perf test only for GETs, or to use a specific sensorId, edit the `run-tests.ps1` script.
+- If the Gateway still logs SQL connection errors after a `deploy.ps1 -ManagedDb`, re-open `services/.env` and verify `SQL_CONN_STR` is correct and that SQL Server container is healthy (`docker compose ... ps` and `docker compose ... logs sqlserver`).
+
+7) If you want me to further automate
+
+- I can: automatically generate a `services/.env` in `deploy.ps1 -ManagedDb` (with a generated SA password), or add a `GATEWAY_LOG_TO_SQL` toggle to silence DB logging during test runs. Tell me which you prefer and I will implement it.
+
+---
+
+End of testing & logs guide.

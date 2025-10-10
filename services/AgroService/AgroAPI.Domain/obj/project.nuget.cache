@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sPYLAIgOoxM=",
+  "dgSpecHash": "yjCrbCwAhC0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\x\\Desktop\\Franklin\\services\\AgroService\\AgroAPI.Domain\\AgroAPI.Domain.csproj",
+  "projectFilePath": "/src/AgroAPI.Domain/AgroAPI.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

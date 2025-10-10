@@ -222,9 +222,24 @@ try {
 }
 
 Write-Host "Compose finished. Current service status:"
-& docker compose -f "$composeFile" --project-directory "$servicesDir" ps
-
-Write-Host "To follow logs run:\n  docker compose -f `"$composeFile`" --project-directory `"$servicesDir`" logs -f"
+if ($ManagedDb) {
+    # Ensure the same compose profile is visible to the ps command so services with
+    # profiles (eg. mongo, sqlserver) are included when showing status.
+    $origComposeProfiles = $env:COMPOSE_PROFILES
+    $env:COMPOSE_PROFILES = 'managed-db'
+    try {
+        & docker compose -f "$composeFile" --project-directory "$servicesDir" ps
+    } finally {
+        if ($null -ne $origComposeProfiles) { $env:COMPOSE_PROFILES = $origComposeProfiles } else { Remove-Item Env:COMPOSE_PROFILES -ErrorAction SilentlyContinue }
+    }
+} else {
+    & docker compose -f "$composeFile" --project-directory "$servicesDir" ps
+}
+if ($ManagedDb) {
+    Write-Host "To follow logs run:`n  docker compose --profile managed-db -f `"$composeFile`" --project-directory `"$servicesDir`" logs -f"
+} else {
+    Write-Host "To follow logs run:`n  docker compose -f `"$composeFile`" --project-directory `"$servicesDir`" logs -f"
+}
 
 Write-Host "Deployment complete."
 exit 0
