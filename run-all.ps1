@@ -42,11 +42,13 @@ function Invoke-Deploy {
     param([switch]$ManagedDb)
     $deployPath = Join-Path $scriptRoot 'deploy.ps1'
     if (-not (Test-Path $deployPath)) { throw "deploy.ps1 not found at $deployPath" }
-    $args = @()
-    if ($ManagedDb) { $args += '-ManagedDb' }
+    $childArgs = @()
+    if ($ManagedDb) { $childArgs += '-ManagedDb' }
     # Avoid forcing overwrite of services/.env unless user explicitly wants -Force; keep current behaviour
-    Write-Log "Invoking deploy.ps1 $($args -join ' ')"
-    $proc = Start-Process -FilePath $global:PreferredShell -ArgumentList ('-NoProfile','-ExecutionPolicy','Bypass','-File', $deployPath) -Wait -PassThru -NoNewWindow
+    Write-Log "Invoking deploy.ps1 $($childArgs -join ' ')"
+    # Build Start-Process argument list: pwsh -NoProfile -ExecutionPolicy Bypass -File deploy.ps1 [childArgs...]
+    $invokeArgs = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$deployPath) + $childArgs
+    $proc = Start-Process -FilePath $global:PreferredShell -ArgumentList $invokeArgs -Wait -PassThru -NoNewWindow
     if ($proc.ExitCode -ne 0) { throw "deploy.ps1 exited with code $($proc.ExitCode)" }
 }
 
